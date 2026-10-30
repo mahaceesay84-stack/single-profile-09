@@ -35,7 +35,7 @@ For GitHub Pages, add a repository variable named `VITE_FORMSPREE_ENDPOINT` unde
 - Transparent profile portrait and project images: `public/assets/`
 - Design tokens and responsive styles: `src/index.css`
 
-The project cards use screenshots from the live AI Task Assistant and Dalasi Tip Splitter, plus the supplied UTG Digital Student Services screenshot. No project image is published for To-do List, so that card intentionally displays a neutral no-image notice instead of invented artwork. The UTG student clearance entry is a prototype, not an official University of The Gambia service. Live demo links are only shown for projects with a published demo; add a `liveUrl` in `src/data/projects.ts` when another project is deployed.
+The project cards use screenshots from the live AI Task Assistant and Dalasi Tip Splitter, plus supplied screenshots for UTG Digital Student Services and To-do List. The UTG student clearance entry is a prototype, not an official University of The Gambia service. Live demo links are only shown for projects with a published demo; add a `liveUrl` in `src/data/projects.ts` when another project is deployed.
 
 ## Check and build
 

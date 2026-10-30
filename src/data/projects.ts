@@ -68,6 +68,8 @@ export const projects: Project[] = [
     title: "To-do List",
     summary:
       "A responsive task-list app built to keep everyday tasks easy to scan and manage.",
+    image: "projects/todo-list.jpg",
+    alt: "Screenshot of the To-do List app showing tasks, due dates, and completion controls",
     stack: ["JavaScript", "Tailwind CSS", "Vite"],
     problem:
       "A lightweight to-do list should make everyday tasks straightforward to keep track of.",
