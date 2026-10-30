@@ -32,7 +32,7 @@ For GitHub Pages, add a repository variable named `VITE_FORMSPREE_ENDPOINT` unde
 
 - Projects, case-study text, and repository/live links: `src/data/projects.ts`
 - Skills: `src/components/Sections.tsx`
-- Portrait and project images: `public/assets/`
+- Transparent profile portrait and project images: `public/assets/`
 - Design tokens and responsive styles: `src/index.css`
 
 The project cards use screenshots from the live AI Task Assistant and Dalasi Tip Splitter, plus the supplied UTG Digital Student Services screenshot. No project image is published for To-do List, so that card intentionally displays a neutral no-image notice instead of invented artwork. The UTG student clearance entry is a prototype, not an official University of The Gambia service. Live demo links are only shown for projects with a published demo; add a `liveUrl` in `src/data/projects.ts` when another project is deployed.
@@ -48,9 +48,8 @@ npm run preview
 
 ## Deploy to GitHub Pages
 
-1. Push changes to `main`.
-2. In repository **Settings → Pages**, select **GitHub Actions** as the build and deployment source.
-3. The workflow at `.github/workflows/deploy.yml` builds the Vite site and deploys `dist` on each push to `main`.
-4. The Vite base path is configured for this repository at `/single-profile-09/`. If the repository is renamed, update `base` in `vite.config.ts` and the canonical, Open Graph, and sitemap URLs in `index.html` and `public/sitemap.xml`.
+1. In repository **Settings → Pages**, choose **Deploy from a branch**, select `gh-pages` and the root folder, then save.
+2. Push changes to `main`. The workflow at `.github/workflows/deploy.yml` builds the Vite site and publishes `dist` to `gh-pages`.
+3. The Vite base path is configured for this repository at `/single-profile-09/`. If the repository is renamed, update `base` in `vite.config.ts` and the canonical, Open Graph, and sitemap URLs in `index.html` and `public/sitemap.xml`.
 
 The Formspree endpoint is public client-side configuration; configure spam controls and allowed domains in Formspree as appropriate.

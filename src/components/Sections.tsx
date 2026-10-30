@@ -147,10 +147,10 @@ export function Hero() {
         <div className="portrait-frame">
           <img
             className="portrait"
-            src={`${import.meta.env.BASE_URL}assets/profile.jpg`}
+            src={`${import.meta.env.BASE_URL}assets/profile-cutout.png`}
             alt="Muhammed K Ceesay"
-            width="912"
-            height="1168"
+            width="907"
+            height="1079"
             fetchPriority="high"
           />
           <span className="portrait-caption">BUILDING FROM THE GAMBIA</span>
