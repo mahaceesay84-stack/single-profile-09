@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mahaceesay84-stack.github.io/single-profile-09/sitemap.xml
