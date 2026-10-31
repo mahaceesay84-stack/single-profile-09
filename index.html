@@ -4,6 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#111312" />
+    <script>
+      let savedTheme = null;
+      try {
+        savedTheme = localStorage.getItem("portfolio-theme");
+      } catch {
+        savedTheme = null;
+      }
+      const preferredTheme =
+        savedTheme === "light" || savedTheme === "dark"
+          ? savedTheme
+          : window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
+      document.documentElement.dataset.theme = preferredTheme;
+    </script>
     <meta
       name="description"
       content="Muhammed K Ceesay is a full-stack software engineer in The Gambia building thoughtful web apps and agentic AI systems."
@@ -73,8 +88,8 @@
         ]
       }
     </script>
-    <script type="module" crossorigin src="/single-profile-09/assets/index-D_SNvaqk.js"></script>
-    <link rel="stylesheet" crossorigin href="/single-profile-09/assets/index-BY8ZK6nv.css">
+    <script type="module" crossorigin src="/single-profile-09/assets/index-CeV2t29_.js"></script>
+    <link rel="stylesheet" crossorigin href="/single-profile-09/assets/index-C_CNT7l4.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
