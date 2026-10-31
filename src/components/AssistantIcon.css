@@ -1,0 +1,80 @@
+.assistant-icon {
+  display: block;
+  flex: none;
+  overflow: visible;
+  color: var(--accent);
+  transition-timing-function: ease-out;
+}
+
+.assistant-icon__bubble,
+.assistant-icon__visor,
+.assistant-icon__eyes ellipse {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.assistant-icon__bubble {
+  fill: var(--surface);
+}
+
+.assistant-icon__visor {
+  fill: var(--accent-soft);
+}
+
+.assistant-icon__eyes {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 160ms ease-out;
+}
+
+.assistant-icon[data-state="error"] .assistant-icon__eyes {
+  transform: scaleY(0.35);
+}
+
+.assistant-icon__error-dot {
+  fill: var(--error);
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+.assistant-launcher__ring {
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.assistant-icon[data-active="false"],
+.assistant-icon[data-active="false"] *,
+.assistant-launcher__ring[data-active="false"] {
+  animation-play-state: paused;
+}
+
+.assistant-launcher__ring[data-active="false"] {
+  opacity: 0;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .assistant-launcher:hover .assistant-icon,
+  .assistant-launcher:focus-visible .assistant-icon {
+    transform: translateY(-2px) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-icon,
+  .assistant-icon * {
+    animation: none !important;
+    transition: opacity 120ms linear;
+  }
+
+  .assistant-launcher__ring {
+    animation: none !important;
+    opacity: 0;
+  }
+}

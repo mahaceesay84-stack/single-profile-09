@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { projects, type Project } from "../data/projects";
+import { ThemeToggle } from "./ThemeToggle";
 
 const emailAddress = "muhammedkceesay42@gmail.com";
 const githubUrl = "https://github.com/mahaceesay84-stack";
@@ -19,6 +20,126 @@ const navItems = [
   ["about", "About"],
   ["contact", "Contact"],
 ] as const;
+
+export type ProfileCardProps = {
+  imageSrc: string;
+  imageSrcSet: string;
+  webpSrcSet: string;
+  alt: string;
+  name: string;
+  role: string;
+  location: string;
+  coordinates: string;
+};
+
+export function ProfileCard({
+  imageSrc,
+  imageSrcSet,
+  webpSrcSet,
+  alt,
+  name,
+  role,
+  location,
+  coordinates,
+}: ProfileCardProps) {
+  const cardRef = useRef<HTMLElement>(null);
+  const [hasEntered, setHasEntered] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [isTabVisible, setIsTabVisible] = useState(
+    () => document.visibilityState === "visible",
+  );
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const handleVisibilityChange = () => {
+      setIsTabVisible(document.visibilityState === "visible");
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    if (!("IntersectionObserver" in window)) {
+      setHasEntered(true);
+      setIsInView(true);
+      return () =>
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange,
+        );
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) return;
+        setIsInView(entry.isIntersecting);
+        if (entry.isIntersecting) setHasEntered(true);
+      },
+      { threshold: 0.15 },
+    );
+    observer.observe(card);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  const isActive = isInView && isTabVisible;
+
+  return (
+    <figure
+      aria-label={`${name}, ${role}`}
+      className="profile-card"
+      data-active={isActive}
+      data-entered={hasEntered}
+      ref={cardRef}
+      tabIndex={0}
+    >
+      <span className="profile-card__glow" aria-hidden="true" />
+      <div className="profile-card__body">
+        <div className="profile-card__frame">
+          <picture className="profile-card__picture">
+            <source type="image/webp" srcSet={webpSrcSet} />
+            <img
+              alt={alt}
+              className="profile-card__photo"
+              decoding="async"
+              fetchPriority="high"
+              height={1079}
+              sizes="(max-width: 640px) 78vw, (max-width: 900px) 19rem, (min-width: 1280px) 27rem, 24rem"
+              src={imageSrc}
+              srcSet={imageSrcSet}
+              width={907}
+            />
+          </picture>
+          <span className="profile-card__inner-glow" aria-hidden="true" />
+          <figcaption className="profile-card__caption">
+            <span className="profile-card__location">
+              <span className="profile-card__status-dot" aria-hidden="true" />
+              BUILDING FROM THE GAMBIA
+            </span>
+            <span className="profile-card__name">{name}</span>
+            <span className="profile-card__role">{role}</span>
+          </figcaption>
+        </div>
+        <div
+          aria-label={`Coordinates for ${location}: ${coordinates.replace(/\n/g, ", ")}`}
+          className="profile-card__coordinates"
+        >
+          <svg
+            aria-hidden="true"
+            className="profile-card__coordinate-ring"
+            viewBox="0 0 100 100"
+          >
+            <circle cx="50" cy="50" r="48" pathLength="100" />
+          </svg>
+          <span className="profile-card__coordinate-location">{location}</span>
+          <span className="profile-card__coordinate-value">{coordinates}</span>
+        </div>
+      </div>
+    </figure>
+  );
+}
 
 function ArrowIcon() {
   return (
@@ -37,12 +158,16 @@ export function Header() {
   const [activeSection, setActiveSection] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightTheme, setLightTheme] = useState(
-    () => localStorage.getItem("portfolio-theme") === "light",
+    () => document.documentElement.dataset.theme === "light",
   );
 
   useEffect(() => {
     document.documentElement.dataset.theme = lightTheme ? "light" : "dark";
-    localStorage.setItem("portfolio-theme", lightTheme ? "light" : "dark");
+    try {
+      localStorage.setItem("portfolio-theme", lightTheme ? "light" : "dark");
+    } catch {
+      // The selected theme remains active for this page view.
+    }
   }, [lightTheme]);
 
   useEffect(() => {
@@ -67,17 +192,26 @@ export function Header() {
       <a className="wordmark" href="#home" aria-label="Muhammed K Ceesay, home">
         MKC<span>.</span>
       </a>
-      <button
-        className={menuOpen ? "menu-toggle is-open" : "menu-toggle"}
-        type="button"
-        aria-expanded={menuOpen}
-        aria-controls="primary-navigation"
-        onClick={() => setMenuOpen((open) => !open)}
-      >
-        <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
-        <span />
-        <span />
-      </button>
+      <div className="header-actions">
+        <ThemeToggle
+          className="mobile-theme-toggle"
+          isLight={lightTheme}
+          onToggle={() => setLightTheme((theme) => !theme)}
+        />
+        <button
+          className={menuOpen ? "menu-toggle is-open" : "menu-toggle"}
+          type="button"
+          aria-expanded={menuOpen}
+          aria-controls="primary-navigation"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span className="sr-only">
+            {menuOpen ? "Close menu" : "Open menu"}
+          </span>
+          <span />
+          <span />
+        </button>
+      </div>
       <nav
         aria-label="Main navigation"
         id="primary-navigation"
@@ -93,14 +227,10 @@ export function Header() {
             {label}
           </a>
         ))}
-        <button
-          className="theme-toggle"
-          type="button"
-          aria-label={`Switch to ${lightTheme ? "dark" : "light"} theme`}
-          onClick={() => setLightTheme((theme) => !theme)}
-        >
-          <span aria-hidden="true">{lightTheme ? "☾" : "☼"}</span>
-        </button>
+        <ThemeToggle
+          isLight={lightTheme}
+          onToggle={() => setLightTheme((theme) => !theme)}
+        />
       </nav>
     </header>
   );
@@ -143,18 +273,17 @@ export function Hero() {
           </a>
         </div>
       </div>
-      <div className="hero-visual reveal">
-        <div className="portrait-frame">
-          <img
-            className="portrait"
-            src={`${import.meta.env.BASE_URL}assets/profile-cutout.png`}
-            alt="Muhammed K Ceesay"
-            width="907"
-            height="1079"
-            fetchPriority="high"
-          />
-          <span className="portrait-caption">BUILDING FROM THE GAMBIA</span>
-        </div>
+      <div className="hero-visual">
+        <ProfileCard
+          alt="Muhammed K Ceesay wearing a dark suit and tie"
+          coordinates={"13°27′ N\n16°34′ W"}
+          imageSrc={`${import.meta.env.BASE_URL}assets/profile.jpg`}
+          imageSrcSet={`${import.meta.env.BASE_URL}assets/profile-1x.jpg 1x, ${import.meta.env.BASE_URL}assets/profile.jpg 2x`}
+          location="BANJUL"
+          name="Muhammed K Ceesay"
+          role="Full-stack Engineer · Agentic AI"
+          webpSrcSet={`${import.meta.env.BASE_URL}assets/profile-1x.webp 1x, ${import.meta.env.BASE_URL}assets/profile-2x.webp 2x`}
+        />
         <img
           className="hero-rings"
           src={`${import.meta.env.BASE_URL}assets/pattern-rings.svg`}
@@ -167,10 +296,6 @@ export function Hero() {
           alt=""
           aria-hidden="true"
         />
-        <span className="hero-coordinate" aria-hidden="true">
-          13°27′ N<br />
-          16°34′ W
-        </span>
       </div>
       <a className="scroll-cue" href="#skills">
         <span /> SCROLL TO EXPLORE
