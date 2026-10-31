@@ -1,0 +1,23 @@
+name = "muhammed-portfolio-assistant"
+main = "src/index.ts"
+compatibility_date = "2025-03-01"
+
+[vars]
+ASSISTANT_ENABLED = "true"
+ALLOWED_ORIGIN = "https://mahaceesay84-stack.github.io"
+LLM_PROVIDER = "groq"
+LLM_MODEL = "openai/gpt-oss-120b"
+LLM_ENDPOINT = "https://api.groq.com/openai/v1"
+GLOBAL_DAILY_CAP = "800"
+
+[[durable_objects.bindings]]
+name = "RATE_LIMITER"
+class_name = "RateLimiter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RateLimiter"]
+
+[[kv_namespaces]]
+binding = "DAILY_COUNTER_KV"
+id = "b2f6669afc4b47238e6d36d5f3de7bba"

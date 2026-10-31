@@ -1,0 +1,64 @@
+.assistant-widget {
+  position: fixed;
+  z-index: 45;
+  right: max(1.25rem, env(safe-area-inset-right));
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.assistant-widget[data-chat-open="true"],
+.assistant-widget[data-menu-open="true"] {
+  visibility: hidden;
+}
+
+.assistant-launcher {
+  position: relative;
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
+  cursor: pointer;
+  transition: transform 200ms ease-out;
+  pointer-events: auto;
+}
+
+.assistant-launcher:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.assistant-launcher:hover,
+.assistant-launcher:focus-visible {
+  transform: none;
+}
+
+@media (max-width: 639px) {
+  .assistant-widget {
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .assistant-launcher {
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-launcher {
+    transition: none;
+  }
+
+  .assistant-launcher:hover,
+  .assistant-launcher:focus-visible {
+    transform: none;
+  }
+}

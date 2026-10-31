@@ -1,0 +1,182 @@
+.welcome-bubble {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.75rem);
+  width: min(15rem, calc(100vw - 6rem));
+  aspect-ratio: 280 / 180;
+  color: var(--text);
+  filter: drop-shadow(var(--shadow-card));
+  transform-origin: 88% 100%;
+  pointer-events: none;
+}
+
+.welcome-bubble[data-visible="true"] {
+  pointer-events: auto;
+}
+
+.welcome-bubble__float {
+  position: absolute;
+  inset: 0;
+}
+
+.welcome-bubble__shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.welcome-bubble__shape path {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: 0.35;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.welcome-bubble__shape .welcome-bubble__tail {
+  fill: none;
+}
+
+.welcome-bubble__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.35rem 0.75rem 0.8rem;
+  pointer-events: none;
+}
+
+.welcome-bubble__top {
+  display: flex;
+  min-height: 2.5rem;
+  justify-content: flex-end;
+}
+
+.welcome-bubble__close {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.welcome-bubble__close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.welcome-bubble__message {
+  flex: 1;
+  padding: 0 0.15rem 0.35rem;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: left;
+  animation: welcome-bubble-text-in 150ms ease-out 100ms both;
+  pointer-events: auto;
+}
+
+.welcome-bubble__actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.25rem;
+  pointer-events: auto;
+}
+
+.welcome-bubble__actions button {
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.68rem;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.welcome-bubble__actions .welcome-bubble__ask {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.welcome-bubble__close:focus-visible,
+.welcome-bubble__message:focus-visible,
+.welcome-bubble__actions button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@keyframes welcome-bubble-text-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 359px) {
+  .welcome-bubble {
+    width: calc(100vw - 6rem);
+  }
+
+  .welcome-bubble__content {
+    padding-inline: 0.6rem;
+  }
+
+  .welcome-bubble__actions {
+    gap: 0.15rem;
+  }
+
+  .welcome-bubble__actions button {
+    padding-inline: 0.35rem;
+    font-size: 0.64rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-bubble.animate-assistant-bubble-enter {
+    animation: welcome-bubble-reduced-in 200ms ease-out both;
+  }
+
+  .welcome-bubble.animate-assistant-bubble-exit {
+    animation: welcome-bubble-reduced-in 200ms ease-in reverse both;
+  }
+
+  .welcome-bubble__float {
+    animation: none !important;
+  }
+
+  .welcome-bubble__message {
+    animation: none;
+  }
+}
+
+@keyframes welcome-bubble-reduced-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

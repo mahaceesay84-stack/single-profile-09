@@ -8,6 +8,7 @@ import {
   Projects,
   Skills,
 } from "./components/Sections";
+import { ChatWidget } from "./components/ChatWidget";
 
 function App() {
   useEffect(() => {
@@ -37,6 +38,7 @@ function App() {
         <Contact />
       </main>
       <Footer />
+      <ChatWidget />
     </>
   );
 }
