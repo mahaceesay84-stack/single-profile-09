@@ -4,7 +4,7 @@ compatibility_date = "2025-03-01"
 
 [vars]
 ASSISTANT_ENABLED = "true"
-ALLOWED_ORIGIN = "https://mahaceesay84-stack.github.io"
+ALLOWED_ORIGIN = "http://localhost:5175"
 LLM_PROVIDER = "groq"
 LLM_MODEL = "openai/gpt-oss-120b"
 LLM_ENDPOINT = "https://api.groq.com/openai/v1"
