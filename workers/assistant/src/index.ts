@@ -161,7 +161,7 @@ function parseMessages(value: unknown): ConversationMessage[] | null {
       })
       .join("")
       .trim();
-    if (!content || content.length > 500) return null;
+    if (!content || (item.role === "user" && content.length > 500)) return null;
     messages.push({ role: item.role, content });
   }
   if (messages[messages.length - 1]?.role !== "user") return null;
