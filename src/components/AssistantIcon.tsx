@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./AssistantIcon.css";
+import { subscribeToMediaQuery } from "../utils/media-query";
 
 export type AssistantIconState =
   "idle" | "hover" | "thinking" | "answering" | "error";
@@ -39,12 +40,15 @@ export function AssistantIcon({
     const updateTabVisibility = () =>
       setTabVisible(document.visibilityState === "visible");
     document.addEventListener("visibilitychange", updateTabVisibility);
-    motionPreference.addEventListener("change", updateMotionPreference);
+    const unsubscribeMotionPreference = subscribeToMediaQuery(
+      motionPreference,
+      updateMotionPreference,
+    );
     if (!("IntersectionObserver" in window)) {
       setIsActive(true);
       return () => {
         document.removeEventListener("visibilitychange", updateTabVisibility);
-        motionPreference.removeEventListener("change", updateMotionPreference);
+        unsubscribeMotionPreference();
       };
     }
     const observer = new IntersectionObserver(([entry]) =>
@@ -54,7 +58,7 @@ export function AssistantIcon({
     return () => {
       observer.disconnect();
       document.removeEventListener("visibilitychange", updateTabVisibility);
-      motionPreference.removeEventListener("change", updateMotionPreference);
+      unsubscribeMotionPreference();
     };
   }, []);
 

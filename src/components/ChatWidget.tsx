@@ -3,6 +3,7 @@ import { AssistantIcon } from "./AssistantIcon";
 import { WelcomeBubble } from "./WelcomeBubble";
 import "./ChatLauncher.css";
 import { welcomeBubbleConfig } from "../data/welcome-bubble";
+import { subscribeToMediaQuery } from "../utils/media-query";
 
 const ChatPanel = lazy(() => import("./ChatPanel"));
 const apiUrl = import.meta.env.VITE_ASSISTANT_API_URL ?? "";
@@ -280,7 +281,10 @@ export function ChatWidget() {
       });
     }
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    motionPreference.addEventListener("change", handleMotionChange);
+    const unsubscribeMotionPreference = subscribeToMediaQuery(
+      motionPreference,
+      handleMotionChange,
+    );
     checkMobileMenu();
 
     const startFirstAppearance = () => {
@@ -316,7 +320,7 @@ export function ChatWidget() {
       }
       window.removeEventListener("load", startFirstAppearance);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      motionPreference.removeEventListener("change", handleMotionChange);
+      unsubscribeMotionPreference();
       menuObserver?.disconnect();
       dismissWelcomeRef.current = () => {};
       stopWelcomeRef.current = () => {};
