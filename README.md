@@ -28,6 +28,17 @@ The endpoint is public client-side configuration, not a secret. Configure spam p
 
 For GitHub Pages, add a repository variable named `VITE_FORMSPREE_ENDPOINT` under **Settings → Secrets and variables → Actions → Variables**, set it to your Formspree form endpoint, then rerun the Pages deployment workflow. Do not commit credentials or personal account information to the repository.
 
+## Visitor analytics
+
+The site can use [GoatCounter](https://www.goatcounter.com/) for privacy-friendly page-view statistics. It does not add a cookie or send visitor data to the portfolio's backend. The analytics provider receives the page request needed to count visits; review its privacy information and applicable requirements for your audience.
+
+1. Create a GoatCounter site and copy its HTTPS counter endpoint, in the form `https://your-site.goatcounter.com/count`.
+2. For local testing, add `VITE_GOATCOUNTER_URL` with that endpoint to your untracked `.env.local`, then restart Vite.
+3. For GitHub Pages, add a repository **Actions variable** named `VITE_GOATCOUNTER_URL` under **Settings → Secrets and variables → Actions → Variables** and set it to the endpoint. Rerun the Pages deployment workflow.
+4. Open your GoatCounter dashboard to view page views and its estimated visitor statistics. The counter starts after the configured build is deployed; it cannot report visits from before setup.
+
+The endpoint is public frontend configuration, not a secret. If `VITE_GOATCOUNTER_URL` is unset, no analytics script is loaded.
+
 ## AI assistant
 
 The optional chat assistant answers only from `src/data/assistant-knowledge.ts` and the editable project data in `src/data/projects.ts`. It is disabled unless both `VITE_ASSISTANT_ENABLED=true` and `VITE_ASSISTANT_API_URL` are configured. The static site never contains an LLM API key.

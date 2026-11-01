@@ -9,6 +9,7 @@ import {
   Skills,
 } from "./components/Sections";
 import { ChatWidget } from "./components/ChatWidget";
+import { VisitorAnalytics } from "./components/VisitorAnalytics";
 
 function App() {
   useEffect(() => {
@@ -39,6 +40,7 @@ function App() {
       </main>
       <Footer />
       <ChatWidget />
+      <VisitorAnalytics />
     </>
   );
 }
