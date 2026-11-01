@@ -93,9 +93,9 @@ The Worker enforces 10 requests/minute and 40/day per hashed IP, plus a globally
 ### Assistant icon, greeting, and discovery
 
 - The inline SVG bot icon and cloud greeting live in `src/components/AssistantIcon.tsx` and `src/components/WelcomeBubble.tsx`; their styles use the shared theme tokens.
-- Edit welcome messages and timing (`enabled`, `firstDelayMs`, `visibleMs`, `gapMs`, `maxAppearances`, `dismissDays`) in `src/data/welcome-bubble.ts`. The discovery prompts, button labels, branches, and consent wording are in `src/data/assistant-discovery.ts`.
+- Edit welcome messages and timing (`enabled`, `firstDelayMs`, `visibleMs`, `gapMs`, `maxAppearances`) in `src/data/welcome-bubble.ts`. The bubble appears on each page visit; dismissing it or opening chat stops it only until the next page load. The discovery prompts, button labels, branches, and consent wording are in `src/data/assistant-discovery.ts`.
 - Approved facts and exact FAQ answers are in `src/data/assistant-knowledge.ts`. Matching education questions are answered deterministically in the browser; other free-text questions use the configured Worker.
-- To test the greeting again, clear `portfolio-welcome-appearances`, `portfolio-welcome-stopped`, and `portfolio-welcome-dismissed` from `sessionStorage`; clear `portfolio-welcome-dismissed-until` from `localStorage` to remove its seven-day dismissal.
+- To test the greeting again, reload the page; bubble state is kept only in memory and resets on each page load.
 - To disable assistant animation, enable the operating system's **Reduce motion** accessibility setting; the icon becomes static and the greeting uses opacity-only motion. Set `enabled: false` in `welcomeBubbleConfig` to disable the greeting cycle.
 - The optional follow-up form sends only after the visitor chooses “Yes, contact me.” It posts to the same `VITE_FORMSPREE_ENDPOINT` as the portfolio contact form, or opens a prefilled email when no endpoint is configured.
 
