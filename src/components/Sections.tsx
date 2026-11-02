@@ -929,6 +929,22 @@ export function Footer() {
           Email <span aria-hidden="true">↗</span>
         </a>
       </div>
+      <section
+        aria-label="Business verification details"
+        className="business-details"
+      >
+        <h2>Business verification details</h2>
+        <p>
+          <strong>Legal Name:</strong> Muhammed K Ceesay
+        </p>
+        <p>
+          <strong>Phone:</strong> <a href="tel:+2204058629">+220 4058629</a>
+        </p>
+        <p>
+          <strong>Address:</strong> Brikama Nyambai, West Coast Region, The
+          Gambia
+        </p>
+      </section>
       <p className="copyright">
         © {new Date().getFullYear()} Muhammed K Ceesay
       </p>
