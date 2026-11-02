@@ -154,6 +154,27 @@ function ArrowIcon() {
   );
 }
 
+function ExternalLinkIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 18 18" fill="none">
+      <path
+        d="M10 3h5v5M15 3 8 10"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M13 10v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
+
 export function Header() {
   const [activeSection, setActiveSection] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -593,13 +614,13 @@ export function Projects() {
             <div className="project-links">
               {project.liveUrl ? (
                 <a href={project.liveUrl} target="_blank" rel="noreferrer">
-                  Live <span aria-hidden="true">↗</span>
+                  Live <ExternalLinkIcon />
                 </a>
               ) : (
                 <span className="unavailable-link">Live demo unavailable</span>
               )}
               <a href={project.codeUrl} target="_blank" rel="noreferrer">
-                Code <span aria-hidden="true">↗</span>
+                Code <ExternalLinkIcon />
               </a>
               <button onClick={() => setSelectedProject(project)} type="button">
                 Case study <ArrowIcon />
@@ -908,6 +929,22 @@ export function Footer() {
           Email <span aria-hidden="true">↗</span>
         </a>
       </div>
+      <section
+        aria-label="Business verification details"
+        className="business-details"
+      >
+        <h2>Business verification details</h2>
+        <p>
+          <strong>Legal Name:</strong> Muhammed K Ceesay
+        </p>
+        <p>
+          <strong>Phone:</strong> <a href="tel:+2204058629">+220 4058629</a>
+        </p>
+        <p>
+          <strong>Address:</strong> Brikama Nyambai, West Coast Region, The
+          Gambia
+        </p>
+      </section>
       <p className="copyright">
         © {new Date().getFullYear()} Muhammed K Ceesay
       </p>

@@ -98,6 +98,16 @@ export const assistantKnowledge: AssistantKnowledge = {
   faq: [
     {
       questions: [
+        "How old is Muhammed?",
+        "How old is he?",
+        "What is Muhammed's age?",
+      ],
+      answer:
+        "I don't have that information. You can contact Muhammed directly at muhammedkceesay42@gmail.com.",
+      action: { label: "Contact Muhammed", href: "#contact" },
+    },
+    {
+      questions: [
         "Is Muhammed a computer science student?",
         "Is he a computer science student?",
         "Is Muhammed studying computer science?",

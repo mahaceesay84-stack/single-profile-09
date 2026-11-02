@@ -28,6 +28,17 @@ The endpoint is public client-side configuration, not a secret. Configure spam p
 
 For GitHub Pages, add a repository variable named `VITE_FORMSPREE_ENDPOINT` under **Settings → Secrets and variables → Actions → Variables**, set it to your Formspree form endpoint, then rerun the Pages deployment workflow. Do not commit credentials or personal account information to the repository.
 
+## Visitor analytics
+
+The site can use [GoatCounter](https://www.goatcounter.com/) for privacy-friendly page-view statistics. It does not add a cookie or send visitor data to the portfolio's backend. The analytics provider receives the page request needed to count visits; review its privacy information and applicable requirements for your audience.
+
+1. Create a GoatCounter site and copy its HTTPS counter endpoint, in the form `https://your-site.goatcounter.com/count`.
+2. For local testing, add `VITE_GOATCOUNTER_URL` with that endpoint to your untracked `.env.local`, then restart Vite.
+3. For GitHub Pages, add a repository **Actions variable** named `VITE_GOATCOUNTER_URL` under **Settings → Secrets and variables → Actions → Variables** and set it to the endpoint. Rerun the Pages deployment workflow.
+4. Open your GoatCounter dashboard to view page views and its estimated visitor statistics. The counter starts after the configured build is deployed; it cannot report visits from before setup.
+
+The endpoint is public frontend configuration, not a secret. If `VITE_GOATCOUNTER_URL` is unset, no analytics script is loaded.
+
 ## AI assistant
 
 The optional chat assistant answers only from `src/data/assistant-knowledge.ts` and the editable project data in `src/data/projects.ts`. It is disabled unless both `VITE_ASSISTANT_ENABLED=true` and `VITE_ASSISTANT_API_URL` are configured. The static site never contains an LLM API key.
@@ -93,9 +104,9 @@ The Worker enforces 10 requests/minute and 40/day per hashed IP, plus a globally
 ### Assistant icon, greeting, and discovery
 
 - The inline SVG bot icon and cloud greeting live in `src/components/AssistantIcon.tsx` and `src/components/WelcomeBubble.tsx`; their styles use the shared theme tokens.
-- Edit welcome messages and timing (`enabled`, `firstDelayMs`, `visibleMs`, `gapMs`, `maxAppearances`, `dismissDays`) in `src/data/welcome-bubble.ts`. The discovery prompts, button labels, branches, and consent wording are in `src/data/assistant-discovery.ts`.
+- Edit welcome messages and timing (`enabled`, `firstDelayMs`, `visibleMs`, `gapMs`, `maxAppearances`) in `src/data/welcome-bubble.ts`. The bubble appears on each page visit; dismissing it or opening chat stops it only until the next page load. The discovery prompts, button labels, branches, and consent wording are in `src/data/assistant-discovery.ts`.
 - Approved facts and exact FAQ answers are in `src/data/assistant-knowledge.ts`. Matching education questions are answered deterministically in the browser; other free-text questions use the configured Worker.
-- To test the greeting again, clear `portfolio-welcome-appearances`, `portfolio-welcome-stopped`, and `portfolio-welcome-dismissed` from `sessionStorage`; clear `portfolio-welcome-dismissed-until` from `localStorage` to remove its seven-day dismissal.
+- To test the greeting again, reload the page; bubble state is kept only in memory and resets on each page load.
 - To disable assistant animation, enable the operating system's **Reduce motion** accessibility setting; the icon becomes static and the greeting uses opacity-only motion. Set `enabled: false` in `welcomeBubbleConfig` to disable the greeting cycle.
 - The optional follow-up form sends only after the visitor chooses “Yes, contact me.” It posts to the same `VITE_FORMSPREE_ENDPOINT` as the portfolio contact form, or opens a prefilled email when no endpoint is configured.
 

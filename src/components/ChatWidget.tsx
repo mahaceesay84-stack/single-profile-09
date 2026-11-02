@@ -3,85 +3,13 @@ import { AssistantIcon } from "./AssistantIcon";
 import { WelcomeBubble } from "./WelcomeBubble";
 import "./ChatLauncher.css";
 import { welcomeBubbleConfig } from "../data/welcome-bubble";
+import { subscribeToMediaQuery } from "../utils/media-query";
 
 const ChatPanel = lazy(() => import("./ChatPanel"));
 const apiUrl = import.meta.env.VITE_ASSISTANT_API_URL ?? "";
 
 const assistantEnabled =
   import.meta.env.VITE_ASSISTANT_ENABLED === "true" && Boolean(apiUrl);
-
-let fallbackStoppedForSession = false;
-let fallbackDismissedForSession = false;
-let fallbackAppearanceCount = 0;
-
-function hasRecentDismissal(): boolean {
-  let dismissedThisSession = fallbackDismissedForSession;
-  try {
-    dismissedThisSession =
-      sessionStorage.getItem(welcomeBubbleConfig.dismissedSessionKey) ===
-        "true" || dismissedThisSession;
-  } catch {
-    // Continue with the persistent dismissal value when session storage is blocked.
-  }
-  try {
-    const dismissedUntil = Number(
-      localStorage.getItem(welcomeBubbleConfig.dismissedUntilKey),
-    );
-    return dismissedThisSession || dismissedUntil > Date.now();
-  } catch {
-    return dismissedThisSession;
-  }
-}
-
-function hasStoppedForSession(): boolean {
-  try {
-    return (
-      sessionStorage.getItem(welcomeBubbleConfig.stoppedSessionKey) ===
-        "true" || fallbackStoppedForSession
-    );
-  } catch {
-    return fallbackStoppedForSession;
-  }
-}
-
-function getAppearanceCount(): number {
-  try {
-    const value = Number(
-      sessionStorage.getItem(welcomeBubbleConfig.appearancesSessionKey),
-    );
-    return Number.isFinite(value)
-      ? Math.max(value, fallbackAppearanceCount)
-      : fallbackAppearanceCount;
-  } catch {
-    return fallbackAppearanceCount;
-  }
-}
-
-function persistSessionValue(key: string, value: string): void {
-  try {
-    sessionStorage.setItem(key, value);
-  } catch {
-    // Module state remains authoritative when session storage is unavailable.
-  }
-}
-
-function rememberSessionStop(): void {
-  fallbackStoppedForSession = true;
-  persistSessionValue(welcomeBubbleConfig.stoppedSessionKey, "true");
-}
-
-function rememberDismissal(): void {
-  fallbackDismissedForSession = true;
-  rememberSessionStop();
-  persistSessionValue(welcomeBubbleConfig.dismissedSessionKey, "true");
-  try {
-    const expiry =
-      Date.now() + welcomeBubbleConfig.dismissDays * 24 * 60 * 60 * 1000;
-    localStorage.setItem(welcomeBubbleConfig.dismissedUntilKey, String(expiry));
-  } catch {
-    // The session flag still prevents further greetings in this tab.
-  }
-}
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -139,9 +67,7 @@ export function ChatWidget() {
     if (
       !assistantEnabled ||
       !welcomeBubbleConfig.enabled ||
-      isOpenRef.current ||
-      hasRecentDismissal() ||
-      hasStoppedForSession()
+      isOpenRef.current
     ) {
       return;
     }
@@ -152,7 +78,7 @@ export function ChatWidget() {
     let pendingAction: (() => void) | null = null;
     let remainingDelay = 0;
     let timerDeadline = 0;
-    let appearances = getAppearanceCount();
+    let appearances = 0;
     let isReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -177,11 +103,9 @@ export function ChatWidget() {
         idleWindow.cancelIdleCallback?.(idleCallbackId);
         idleCallbackId = undefined;
       }
-      rememberSessionStop();
       setWelcomeVisible(false);
     };
     const dismiss = () => {
-      rememberDismissal();
       stopCycle();
     };
     stopWelcomeRef.current = stopCycle;
@@ -222,11 +146,6 @@ export function ChatWidget() {
         return;
       }
       appearances += 1;
-      fallbackAppearanceCount = appearances;
-      persistSessionValue(
-        welcomeBubbleConfig.appearancesSessionKey,
-        String(appearances),
-      );
       setWelcomeMessage(
         welcomeBubbleConfig.messages[
           (appearances - 1) % welcomeBubbleConfig.messages.length
@@ -280,7 +199,10 @@ export function ChatWidget() {
       });
     }
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    motionPreference.addEventListener("change", handleMotionChange);
+    const unsubscribeMotionPreference = subscribeToMediaQuery(
+      motionPreference,
+      handleMotionChange,
+    );
     checkMobileMenu();
 
     const startFirstAppearance = () => {
@@ -316,7 +238,7 @@ export function ChatWidget() {
       }
       window.removeEventListener("load", startFirstAppearance);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      motionPreference.removeEventListener("change", handleMotionChange);
+      unsubscribeMotionPreference();
       menuObserver?.disconnect();
       dismissWelcomeRef.current = () => {};
       stopWelcomeRef.current = () => {};
@@ -325,7 +247,6 @@ export function ChatWidget() {
 
   const openFromWelcome = () => {
     stopWelcomeRef.current();
-    rememberSessionStop();
     setWelcomeVisible(false);
     setStartDiscovery(true);
     setIsOpen(true);
@@ -333,7 +254,6 @@ export function ChatWidget() {
 
   const openFromLauncher = () => {
     stopWelcomeRef.current();
-    rememberSessionStop();
     setWelcomeVisible(false);
     setStartDiscovery(true);
     setIsOpen(true);

@@ -206,9 +206,9 @@
 .assistant-message--user {
   align-self: flex-end;
   border-bottom-right-radius: 0.3rem;
-  border: 1px solid var(--line);
-  background: var(--surface-raised);
-  color: var(--text);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
 .assistant-message--assistant {
